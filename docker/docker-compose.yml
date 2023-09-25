@@ -1,0 +1,11 @@
+version: '3.1'
+services:
+  db:
+    image: postgres:11
+    container_name: gh_db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: devGitHubDB
+    ports:
+      - "1000:5432"
