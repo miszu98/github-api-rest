@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
-import pl.malek.githubapirest.dto.UserDTO;
+import pl.malek.githubapirest.dto.GitHubUserDTO;
 import pl.malek.githubapirest.exceptions.ExternalApiResponseException;
 import pl.malek.githubapirest.service.impl.GitHubConnectorServiceImpl;
 import reactor.core.publisher.Flux;
@@ -56,7 +56,7 @@ public class GitHubConnectorServiceImplTests {
         when(requestHeadersUriSpecMock.uri(getFakeExternalApiUrl()))
                 .thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        when(responseSpecMock.bodyToFlux(UserDTO.class)).thenReturn(null);
+        when(responseSpecMock.bodyToFlux(GitHubUserDTO.class)).thenReturn(null);
 
         ExternalApiResponseException exception = assertThrows(ExternalApiResponseException.class,
                 () -> underTest.getUserDetailsByUsername(getFakeUsername()));
@@ -71,17 +71,17 @@ public class GitHubConnectorServiceImplTests {
         when(requestHeadersUriSpecMock.uri(getFakeExternalApiUrl()))
                 .thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        when(responseSpecMock.bodyToFlux(UserDTO.class)).thenReturn(Flux.just(getFakeUserDTO()));
+        when(responseSpecMock.bodyToFlux(GitHubUserDTO.class)).thenReturn(Flux.just(getFakeUserDTO()));
 
-        UserDTO userDTO = underTest.getUserDetailsByUsername(getFakeUsername());
+        GitHubUserDTO gitHubUserDTO = underTest.getUserDetailsByUsername(getFakeUsername());
 
-        assertNotNull(userDTO);
-        assertEquals(1001, userDTO.getId());
-        assertEquals(getFakeUsername(), userDTO.getLogin());
-        assertEquals(new URL(getFakePatternExternalApiUrl()), userDTO.getAvatarUrl());
-        assertNotNull(userDTO.getCreatedAt());
-        assertEquals(getAccountType(), userDTO.getType());
-        assertEquals(getFakeName(), userDTO.getName());
+        assertNotNull(gitHubUserDTO);
+        assertEquals(1001, gitHubUserDTO.getId());
+        assertEquals(getFakeUsername(), gitHubUserDTO.getLogin());
+        assertEquals(new URL(getFakePatternExternalApiUrl()), gitHubUserDTO.getAvatarUrl());
+        assertNotNull(gitHubUserDTO.getCreatedAt());
+        assertEquals(getAccountType(), gitHubUserDTO.getType());
+        assertEquals(getFakeName(), gitHubUserDTO.getName());
     }
 
     @Test
@@ -91,12 +91,12 @@ public class GitHubConnectorServiceImplTests {
         when(requestHeadersUriSpecMock.uri(getFakeExternalApiUrl()))
                 .thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        when(responseSpecMock.bodyToFlux(UserDTO.class)).thenReturn(Flux.just(getFakeUserDTO()));
+        when(responseSpecMock.bodyToFlux(GitHubUserDTO.class)).thenReturn(Flux.just(getFakeUserDTO()));
 
-        UserDTO userDTO = underTest.getUserDetailsByUsername(getFakeUsername());
+        GitHubUserDTO gitHubUserDTO = underTest.getUserDetailsByUsername(getFakeUsername());
 
-        assertNull(userDTO.getFollowers());
-        assertNull(userDTO.getCalculations());
+        assertNull(gitHubUserDTO.getFollowers());
+        assertNull(gitHubUserDTO.getCalculations());
     }
 
     @Test
@@ -106,12 +106,12 @@ public class GitHubConnectorServiceImplTests {
         when(requestHeadersUriSpecMock.uri(getFakeExternalApiUrl()))
                 .thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        when(responseSpecMock.bodyToFlux(UserDTO.class)).thenReturn(Flux.just(getFakeUserDTO()));
+        when(responseSpecMock.bodyToFlux(GitHubUserDTO.class)).thenReturn(Flux.just(getFakeUserDTO()));
 
-        UserDTO userDTO = underTest.getUserDetailsByUsername(getFakeUsername());
+        GitHubUserDTO gitHubUserDTO = underTest.getUserDetailsByUsername(getFakeUsername());
 
-        assertNull(userDTO.getPublicRepos());
-        assertNull(userDTO.getCalculations());
+        assertNull(gitHubUserDTO.getPublicRepos());
+        assertNull(gitHubUserDTO.getCalculations());
     }
 
     @Test
@@ -121,12 +121,12 @@ public class GitHubConnectorServiceImplTests {
         when(requestHeadersUriSpecMock.uri(getFakeExternalApiUrl()))
                 .thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        when(responseSpecMock.bodyToFlux(UserDTO.class)).thenReturn(Flux.just(getFakeUserWithFollowersZero()));
+        when(responseSpecMock.bodyToFlux(GitHubUserDTO.class)).thenReturn(Flux.just(getFakeUserWithFollowersZero()));
 
-        UserDTO userDTO = underTest.getUserDetailsByUsername(getFakeUsername());
+        GitHubUserDTO gitHubUserDTO = underTest.getUserDetailsByUsername(getFakeUsername());
 
-        assertNull(userDTO.getPublicRepos());
-        assertNull(userDTO.getCalculations());
+        assertNull(gitHubUserDTO.getPublicRepos());
+        assertNull(gitHubUserDTO.getCalculations());
     }
 
     @Test
@@ -136,14 +136,13 @@ public class GitHubConnectorServiceImplTests {
         when(requestHeadersUriSpecMock.uri(getFakeExternalApiUrl()))
                 .thenReturn(requestHeadersSpecMock);
         when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
-        when(responseSpecMock.bodyToFlux(UserDTO.class)).thenReturn(Flux.just(getFakeUserWithFollowersNotZero()));
+        when(responseSpecMock.bodyToFlux(GitHubUserDTO.class)).thenReturn(Flux.just(getFakeUserWithFollowersNotZero()));
 
-        UserDTO userDTO = underTest.getUserDetailsByUsername(getFakeUsername());
+        GitHubUserDTO gitHubUserDTO = underTest.getUserDetailsByUsername(getFakeUsername());
 
-        assertNotNull(userDTO.getPublicRepos());
-        assertNotNull(userDTO.getFollowers());
-        assertEquals(0.7636363636363636 ,userDTO.getCalculations());
+        assertNotNull(gitHubUserDTO.getPublicRepos());
+        assertNotNull(gitHubUserDTO.getFollowers());
+        assertEquals(0.7636363636363636 , gitHubUserDTO.getCalculations());
     }
-
 
 }

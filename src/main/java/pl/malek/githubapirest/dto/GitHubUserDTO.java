@@ -1,8 +1,10 @@
 package pl.malek.githubapirest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -10,7 +12,9 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class UserDTO extends UserStatsDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+public class GitHubUserDTO extends GitHubUserStatsDTO {
 
     private Long id;
 

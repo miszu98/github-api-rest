@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class UserStatsDTO {
+public class GitHubUserStatsDTO {
     private Integer followers;
 
     @JsonProperty("public_repos")

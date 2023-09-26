@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import pl.malek.githubapirest.dto.UserDTO;
+import pl.malek.githubapirest.dto.GitHubUserDTO;
 import pl.malek.githubapirest.exceptions.ExternalApiResponseException;
 import pl.malek.githubapirest.service.ApiExternalConnectorService;
 import reactor.core.publisher.Flux;
@@ -15,7 +15,7 @@ import static java.util.Objects.nonNull;
 import static pl.malek.githubapirest.exceptions.ExceptionMessages.EXTERNAL_API_CONNECTION_ERROR;
 
 @Slf4j
-@Service
+@Service("GitHubConnector")
 @RequiredArgsConstructor
 public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
 
@@ -25,23 +25,23 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
     private final WebClient.Builder webClientBuilder;
 
     @Override
-    public UserDTO getUserDetailsByUsername(String username) {
-        Flux<UserDTO> userDTOFlux = getDataFromGitHubApi(username);
+    public GitHubUserDTO getUserDetailsByUsername(String username) {
+        Flux<GitHubUserDTO> userDTOFlux = getDataFromGitHubApi(username);
         validateResponseFromExternalApi(userDTOFlux);
 
-        UserDTO userDTO = userDTOFlux.blockFirst();
-        doCalculations(userDTO);
+        GitHubUserDTO gitHubUserDTO = userDTOFlux.blockFirst();
+        doCalculations(gitHubUserDTO);
 
-        return userDTO;
+        return gitHubUserDTO;
     }
 
-    private void doCalculations(UserDTO userDTO) {
-        Integer followers = userDTO.getFollowers();
-        Integer publicRepos = userDTO.getPublicRepos();
+    private void doCalculations(GitHubUserDTO gitHubUserDTO) {
+        Integer followers = gitHubUserDTO.getFollowers();
+        Integer publicRepos = gitHubUserDTO.getPublicRepos();
 
         if (followersAndPublicReposAreNotNull(followers, publicRepos)) {
             Double calculateResult = calculate(followers, publicRepos);
-            userDTO.setCalculations(calculateResult);
+            gitHubUserDTO.setCalculations(calculateResult);
         }
     }
 
@@ -52,16 +52,16 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
         } return null;
     }
 
-    private Flux<UserDTO> getDataFromGitHubApi(String username) {
+    private Flux<GitHubUserDTO> getDataFromGitHubApi(String username) {
         final String githubApiUrl = githubApi.replace("{username}", username);
         return webClientBuilder.build()
                 .get()
                 .uri(githubApiUrl)
                 .retrieve()
-                .bodyToFlux(UserDTO.class);
+                .bodyToFlux(GitHubUserDTO.class);
     }
 
-    private void validateResponseFromExternalApi(Flux<UserDTO> userDTOFlux) {
+    private void validateResponseFromExternalApi(Flux<GitHubUserDTO> userDTOFlux) {
         if (isNull(userDTOFlux)) {
             throw new ExternalApiResponseException(EXTERNAL_API_CONNECTION_ERROR.getValue());
         }

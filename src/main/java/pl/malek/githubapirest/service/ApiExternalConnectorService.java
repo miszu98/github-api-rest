@@ -1,7 +1,7 @@
 package pl.malek.githubapirest.service;
 
-import pl.malek.githubapirest.dto.UserDTO;
+import pl.malek.githubapirest.dto.GitHubUserDTO;
 
 public interface ApiExternalConnectorService {
-    UserDTO getUserDetailsByUsername(String username);
+    GitHubUserDTO getUserDetailsByUsername(String username);
 }

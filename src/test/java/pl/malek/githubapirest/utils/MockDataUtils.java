@@ -1,6 +1,6 @@
 package pl.malek.githubapirest.utils;
 
-import pl.malek.githubapirest.dto.UserDTO;
+import pl.malek.githubapirest.dto.GitHubUserDTO;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,8 +28,8 @@ public class MockDataUtils {
         return "Robert C. Martin";
     }
 
-    public static UserDTO getFakeUserDTO() throws MalformedURLException {
-        return UserDTO.builder()
+    public static GitHubUserDTO getFakeUserDTO() throws MalformedURLException {
+        return GitHubUserDTO.builder()
                 .id(1001L)
                 .login(getFakeUsername())
                 .avatarUrl(new URL(getFakePatternExternalApiUrl()))
@@ -39,17 +39,17 @@ public class MockDataUtils {
                 .build();
     }
 
-    public static UserDTO getFakeUserWithFollowersZero() throws MalformedURLException {
-        UserDTO userDTO = getFakeUserDTO();
-        userDTO.setFollowers(0);
-        return userDTO;
+    public static GitHubUserDTO getFakeUserWithFollowersZero() throws MalformedURLException {
+        GitHubUserDTO gitHubUserDTO = getFakeUserDTO();
+        gitHubUserDTO.setFollowers(0);
+        return gitHubUserDTO;
     }
 
-    public static UserDTO getFakeUserWithFollowersNotZero() throws MalformedURLException {
-        UserDTO userDTO = getFakeUserDTO();
-        userDTO.setFollowers(55);
-        userDTO.setPublicRepos(5);
-        return userDTO;
+    public static GitHubUserDTO getFakeUserWithFollowersNotZero() throws MalformedURLException {
+        GitHubUserDTO gitHubUserDTO = getFakeUserDTO();
+        gitHubUserDTO.setFollowers(55);
+        gitHubUserDTO.setPublicRepos(5);
+        return gitHubUserDTO;
     }
 
 }
