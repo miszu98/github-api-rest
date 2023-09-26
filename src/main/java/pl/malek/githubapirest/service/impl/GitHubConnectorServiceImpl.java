@@ -68,7 +68,8 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
     }
 
     private void validateResponseFromExternalApi(Flux<GitHubUserDTO> userDTOFlux) {
-        if (isNull(userDTOFlux)) {
+        boolean responseFromExternalApiIsNull = isNull(userDTOFlux) || isNull(userDTOFlux.blockFirst());
+        if (responseFromExternalApiIsNull) {
             throw new ExternalApiResponseException(EXTERNAL_API_CONNECTION_ERROR.getValue());
         }
     }
