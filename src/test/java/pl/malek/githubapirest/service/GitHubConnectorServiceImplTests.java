@@ -41,6 +41,9 @@ public class GitHubConnectorServiceImplTests {
     @Mock
     private WebClient.ResponseSpec responseSpecMock;
 
+    @Mock
+    private GitHubUserCallService gitHubUserCallService;
+
     @InjectMocks
     private GitHubConnectorServiceImpl underTest;
 

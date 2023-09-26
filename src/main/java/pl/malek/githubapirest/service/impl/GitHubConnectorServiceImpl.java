@@ -1,5 +1,6 @@
 package pl.malek.githubapirest.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import pl.malek.githubapirest.dto.GitHubUserDTO;
 import pl.malek.githubapirest.exceptions.ExternalApiResponseException;
 import pl.malek.githubapirest.service.ApiExternalConnectorService;
+import pl.malek.githubapirest.service.GitHubUserCallService;
 import reactor.core.publisher.Flux;
 
 import static java.util.Objects.isNull;
@@ -24,7 +26,10 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
 
     private final WebClient.Builder webClientBuilder;
 
+    private final GitHubUserCallService gitHubUserCallService;
+
     @Override
+    @Transactional
     public GitHubUserDTO getUserDetailsByUsername(String username) {
         Flux<GitHubUserDTO> userDTOFlux = getDataFromGitHubApi(username);
         validateResponseFromExternalApi(userDTOFlux);
@@ -32,6 +37,7 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
         GitHubUserDTO gitHubUserDTO = userDTOFlux.blockFirst();
         doCalculations(gitHubUserDTO);
 
+        gitHubUserCallService.updateCallsNumber(username);
         return gitHubUserDTO;
     }
 
