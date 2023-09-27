@@ -19,4 +19,12 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="add_version_column" author="Michał Małek">
+        <addColumn tableName="github_user_calls">
+            <column name="version" type="int"/>
+        </addColumn>
+    </changeSet>
+
+
+
 </databaseChangeLog>

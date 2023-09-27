@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import pl.malek.githubapirest.dto.GitHubUserDTO;
@@ -31,14 +32,27 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
     @Override
     @Transactional
     public GitHubUserDTO getUserDetailsByUsername(String username) {
+        log.info("Trying to get information about: {}", username);
         Flux<GitHubUserDTO> userDTOFlux = getDataFromGitHubApi(username);
         validateResponseFromExternalApi(userDTOFlux);
 
         GitHubUserDTO gitHubUserDTO = userDTOFlux.blockFirst();
         doCalculations(gitHubUserDTO);
 
-        gitHubUserCallService.updateCallsNumber(username);
+        searchRecordForUpdate(username);
         return gitHubUserDTO;
+    }
+
+    private void searchRecordForUpdate(String username) {
+        boolean searchNotUpdatedRecord = true;
+        while (searchNotUpdatedRecord) {
+            try {
+                gitHubUserCallService.updateCallsNumber(username);
+                searchNotUpdatedRecord = false;
+            } catch (ObjectOptimisticLockingFailureException e) {
+                log.error(e.getMessage());
+            }
+        }
     }
 
     private void doCalculations(GitHubUserDTO gitHubUserDTO) {

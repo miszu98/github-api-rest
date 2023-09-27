@@ -22,4 +22,7 @@ public class GitHubUserCallsEntity {
 
     private Long callsNumber;
 
+    @Version
+    private Integer version;
+
 }
