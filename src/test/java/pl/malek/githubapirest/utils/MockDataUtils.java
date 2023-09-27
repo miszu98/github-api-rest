@@ -1,12 +1,22 @@
 package pl.malek.githubapirest.utils;
 
 import pl.malek.githubapirest.dto.GitHubUserDTO;
+import pl.malek.githubapirest.entity.GitHubUserCallsEntity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 
 public class MockDataUtils {
+
+    public static GitHubUserCallsEntity getFakeGitHubUserCallsEntity() {
+        return GitHubUserCallsEntity.builder()
+                .callsNumber(10L)
+                .username(getFakeUsername())
+                .version(4)
+                .id(200L)
+                .build();
+    }
 
     public static String getFakePatternExternalApiUrl() {
         return "https://fake.external-api.com/users/{username}";
