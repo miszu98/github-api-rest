@@ -1,9 +1,9 @@
 package pl.malek.githubapirest.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,7 +30,6 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
     private final GitHubUserCallService gitHubUserCallService;
 
     @Override
-    @Transactional
     public GitHubUserDTO getUserDetailsByUsername(String username) {
         log.info("Trying to get information about: {}", username);
         Flux<GitHubUserDTO> userDTOFlux = getDataFromGitHubApi(username);
@@ -40,7 +39,8 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
         doCalculations(gitHubUserDTO);
 
         searchRecordForUpdate(username);
-        return gitHubUserDTO;
+        // todo wydzielic zapis i pobieranie danych z api do fasady
+        return new GitHubUserDTO();
     }
 
     private void searchRecordForUpdate(String username) {
@@ -49,8 +49,8 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
             try {
                 gitHubUserCallService.updateCallsNumber(username);
                 searchNotUpdatedRecord = false;
-            } catch (ObjectOptimisticLockingFailureException e) {
-                log.error(e.getMessage());
+            } catch (ObjectOptimisticLockingFailureException | DataIntegrityViolationException e) {
+                log.warn(e.getMessage());
             }
         }
     }

@@ -25,6 +25,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="add_unique_constraint_for_username_col" author="Michał Małek">
+        <addUniqueConstraint columnNames="username"
+                              constraintName="unique_username"
+                              tableName="github_user_calls"
+                              validate="true"/>
+    </changeSet>
 
 
 </databaseChangeLog>
