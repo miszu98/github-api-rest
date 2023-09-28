@@ -37,7 +37,7 @@ public class GitHubUserCallServiceImplTest {
 
         when(gitHubUserCallRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        underTest.updateCallsNumber(username);
+        underTest.tryUpdateCallsNumber(username);
 
         verify(gitHubUserCallRepository).save(callsEntityArgumentCaptor.capture());
 
@@ -54,7 +54,7 @@ public class GitHubUserCallServiceImplTest {
 
         when(gitHubUserCallRepository.findByUsername(username)).thenReturn(Optional.of(gitHubUserCallsEntity));
 
-        underTest.updateCallsNumber(username);
+        underTest.tryUpdateCallsNumber(username);
 
         verify(gitHubUserCallRepository).save(callsEntityArgumentCaptor.capture());
 

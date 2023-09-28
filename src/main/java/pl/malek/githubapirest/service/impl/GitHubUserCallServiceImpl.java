@@ -2,9 +2,9 @@ package pl.malek.githubapirest.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import pl.malek.githubapirest.entity.GitHubUserCallsEntity;
 import pl.malek.githubapirest.repository.GitHubUserCallRepository;
 import pl.malek.githubapirest.service.GitHubUserCallService;
@@ -18,9 +18,7 @@ public class GitHubUserCallServiceImpl implements GitHubUserCallService {
 
     private final GitHubUserCallRepository gitHubUserCallRepository;
 
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void updateCallsNumber(String username) {
+    private void updateCallsNumber(String username) {
         Optional<GitHubUserCallsEntity> optionalGitHubUserCalls = gitHubUserCallRepository.findByUsername(username);
         boolean userNotExists = optionalGitHubUserCalls.isEmpty();
 
@@ -31,6 +29,19 @@ public class GitHubUserCallServiceImpl implements GitHubUserCallService {
             GitHubUserCallsEntity gitHubUserCallsEntity = optionalGitHubUserCalls.get();
             incrementCallsNumber(gitHubUserCallsEntity);
             gitHubUserCallRepository.save(gitHubUserCallsEntity);
+        }
+    }
+
+    @Override
+    public void tryUpdateCallsNumber(String username) {
+        boolean searchNotUpdatedRecord = true;
+        while (searchNotUpdatedRecord) {
+            try {
+                updateCallsNumber(username);
+                searchNotUpdatedRecord = false;
+            } catch (ObjectOptimisticLockingFailureException | DataIntegrityViolationException e) {
+                log.warn(e.getMessage());
+            }
         }
     }
 

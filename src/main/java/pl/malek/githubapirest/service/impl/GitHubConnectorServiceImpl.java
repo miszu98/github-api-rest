@@ -3,14 +3,11 @@ package pl.malek.githubapirest.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import pl.malek.githubapirest.dto.GitHubUserDTO;
 import pl.malek.githubapirest.exceptions.ExternalApiResponseException;
 import pl.malek.githubapirest.service.ApiExternalConnectorService;
-import pl.malek.githubapirest.service.GitHubUserCallService;
 import reactor.core.publisher.Flux;
 
 import static java.util.Objects.isNull;
@@ -27,8 +24,6 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
 
     private final WebClient.Builder webClientBuilder;
 
-    private final GitHubUserCallService gitHubUserCallService;
-
     @Override
     public GitHubUserDTO getUserDetailsByUsername(String username) {
         log.info("Trying to get information about: {}", username);
@@ -37,22 +32,7 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
 
         GitHubUserDTO gitHubUserDTO = userDTOFlux.blockFirst();
         doCalculations(gitHubUserDTO);
-
-        searchRecordForUpdate(username);
-        // todo wydzielic zapis i pobieranie danych z api do fasady
-        return new GitHubUserDTO();
-    }
-
-    private void searchRecordForUpdate(String username) {
-        boolean searchNotUpdatedRecord = true;
-        while (searchNotUpdatedRecord) {
-            try {
-                gitHubUserCallService.updateCallsNumber(username);
-                searchNotUpdatedRecord = false;
-            } catch (ObjectOptimisticLockingFailureException | DataIntegrityViolationException e) {
-                log.warn(e.getMessage());
-            }
-        }
+        return gitHubUserDTO;
     }
 
     private void doCalculations(GitHubUserDTO gitHubUserDTO) {
