@@ -30,7 +30,6 @@ public class GitHubUserCallUpdateServiceImpl {
             incrementCallsNumber(gitHubUserCallsEntity);
             gitHubUserCallRepository.save(gitHubUserCallsEntity);
         }
-        throw new RuntimeException("dsadaa");
     }
 
     private void incrementCallsNumber(GitHubUserCallsEntity gitHubUserCallsEntity) {
