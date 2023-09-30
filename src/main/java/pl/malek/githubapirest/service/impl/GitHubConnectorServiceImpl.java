@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import pl.malek.githubapirest.dto.GitHubUserDTO;
 import pl.malek.githubapirest.exceptions.ExternalApiResponseException;
+import pl.malek.githubapirest.exceptions.ValidationException;
 import pl.malek.githubapirest.service.ApiExternalConnectorService;
 import reactor.core.publisher.Flux;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static pl.malek.githubapirest.exceptions.ExceptionMessages.EXTERNAL_API_CONNECTION_ERROR;
+import static pl.malek.githubapirest.exceptions.ExceptionMessages.USER_NOT_FOUND;
 
 @Slf4j
 @Service("GitHubConnector")
@@ -58,7 +60,8 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
                 .get()
                 .uri(githubApiUrl)
                 .retrieve()
-                .bodyToFlux(GitHubUserDTO.class);
+                .bodyToFlux(GitHubUserDTO.class)
+                .onErrorMap(error -> new ExternalApiResponseException(error.getMessage()));
     }
 
     private void validateResponseFromExternalApi(Flux<GitHubUserDTO> userDTOFlux) {
