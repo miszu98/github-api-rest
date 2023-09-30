@@ -81,7 +81,7 @@ public class GitHubConnectorServiceImplTests {
         assertNotNull(gitHubUserDTO);
         assertEquals(1001, gitHubUserDTO.getId());
         assertEquals(getFakeUsername(), gitHubUserDTO.getLogin());
-        assertEquals(new URL(getFakePatternExternalApiUrl()), gitHubUserDTO.getAvatarUrl());
+        assertEquals(new URL(getFakeExternalApiUrl()), gitHubUserDTO.getAvatarUrl());
         assertNotNull(gitHubUserDTO.getCreatedAt());
         assertEquals(getAccountType(), gitHubUserDTO.getType());
         assertEquals(getFakeName(), gitHubUserDTO.getName());

@@ -58,8 +58,7 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
                 .get()
                 .uri(githubApiUrl)
                 .retrieve()
-                .bodyToFlux(GitHubUserDTO.class)
-                .onErrorMap(error -> new ExternalApiResponseException(error.getMessage()));
+                .bodyToFlux(GitHubUserDTO.class);
     }
 
     private void validateResponseFromExternalApi(Flux<GitHubUserDTO> userDTOFlux) {

@@ -30,6 +30,10 @@ public class MockDataUtils {
         return "mock_test_username";
     }
 
+    public static String getFakeNotExistingUsername() {
+        return "new_user";
+    }
+
     public static String getAccountType() {
         return "user";
     }
@@ -42,7 +46,7 @@ public class MockDataUtils {
         return GitHubUserDTO.builder()
                 .id(1001L)
                 .login(getFakeUsername())
-                .avatarUrl(new URL(getFakePatternExternalApiUrl()))
+                .avatarUrl(new URL(getFakeExternalApiUrl()))
                 .createdAt(LocalDateTime.now())
                 .type(getAccountType())
                 .name(getFakeName())
