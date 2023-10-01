@@ -8,9 +8,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import pl.malek.githubapirest.configuration.AbstractIntegrationTestConfiguration;
 import pl.malek.githubapirest.dto.GitHubUserDTO;
-import pl.malek.githubapirest.entity.GitHubUserCallsEntity;
+import pl.malek.githubapirest.entity.GitHubUserRequestEntity;
 import pl.malek.githubapirest.exceptions.ExceptionMessages;
-import pl.malek.githubapirest.repository.GitHubUserCallRepository;
+import pl.malek.githubapirest.repository.GitHubUserRequestRepository;
 import pl.malek.githubapirest.service.impl.GitHubConnectorServiceImpl;
 
 import java.net.URL;
@@ -31,20 +31,20 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
     private static final String API_URL = "/api/v1/users/";
 
     @Autowired
-    private GitHubUserCallRepository gitHubUserCallRepository;
+    private GitHubUserRequestRepository gitHubUserRequestRepository;
 
     @MockBean
     private GitHubConnectorServiceImpl gitHubConnectorService;
 
     @BeforeEach
     void setUp() {
-        GitHubUserCallsEntity gitHubUserCallsEntity = getFakeGitHubUserCallsEntity();
-        gitHubUserCallRepository.save(gitHubUserCallsEntity);
+        GitHubUserRequestEntity gitHubUserRequestEntity = getFakeGitHubUserCallsEntity();
+        gitHubUserRequestRepository.save(gitHubUserRequestEntity);
     }
 
     @AfterEach
     void tearDown() {
-        gitHubUserCallRepository.deleteAll();
+        gitHubUserRequestRepository.deleteAll();
     }
 
     @Test
@@ -52,7 +52,7 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
         final String existedUsernameInDatabase = getFakeUsername();
         final GitHubUserDTO gitHubUserDTO = getFakeUserDTO();
 
-        when(gitHubConnectorService.getUserDetailsByUsername(existedUsernameInDatabase))
+        when(gitHubConnectorService.getUserDetailsByLogin(existedUsernameInDatabase))
                 .thenReturn(gitHubUserDTO);
 
         mockMvc.perform(get("/api/v1/users/" + existedUsernameInDatabase)
@@ -68,12 +68,12 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
                         jsonPath("$.avatarUrl").value(new URL(getFakeExternalApiUrl()).toString())
                 );
 
-        Optional<GitHubUserCallsEntity> gitHubUserCallsEntityOptional = gitHubUserCallRepository
-                .findByUsername(existedUsernameInDatabase);
-        GitHubUserCallsEntity gitHubUserCallsEntity = gitHubUserCallsEntityOptional.get();
+        Optional<GitHubUserRequestEntity> gitHubUserCallsEntityOptional = gitHubUserRequestRepository
+                .findByLogin(existedUsernameInDatabase);
+        GitHubUserRequestEntity gitHubUserRequestEntity = gitHubUserCallsEntityOptional.get();
 
-        assertEquals(11, gitHubUserCallsEntity.getCallsNumber());
-        assertEquals(5, gitHubUserCallsEntity.getVersion());
+        assertEquals(11, gitHubUserRequestEntity.getRequestCount());
+        assertEquals(5, gitHubUserRequestEntity.getVersion());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
         final String notExistedUsernameInDatabase = getFakeNotExistingUsername();
         final GitHubUserDTO gitHubUserDTO = getFakeUserDTO();
 
-        when(gitHubConnectorService.getUserDetailsByUsername(notExistedUsernameInDatabase))
+        when(gitHubConnectorService.getUserDetailsByLogin(notExistedUsernameInDatabase))
                 .thenReturn(gitHubUserDTO);
 
         mockMvc.perform(get("/api/v1/users/" + notExistedUsernameInDatabase)
@@ -97,12 +97,12 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
                         jsonPath("$.avatarUrl").value(new URL(getFakeExternalApiUrl()).toString())
                 );
 
-        Optional<GitHubUserCallsEntity> gitHubUserCallsEntityOptional = gitHubUserCallRepository
-                .findByUsername(notExistedUsernameInDatabase);
-        GitHubUserCallsEntity gitHubUserCallsEntity = gitHubUserCallsEntityOptional.get();
+        Optional<GitHubUserRequestEntity> gitHubUserCallsEntityOptional = gitHubUserRequestRepository
+                .findByLogin(notExistedUsernameInDatabase);
+        GitHubUserRequestEntity gitHubUserRequestEntity = gitHubUserCallsEntityOptional.get();
 
-        assertEquals(1, gitHubUserCallsEntity.getCallsNumber());
-        assertEquals(0, gitHubUserCallsEntity.getVersion());
+        assertEquals(1, gitHubUserRequestEntity.getRequestCount());
+        assertEquals(0, gitHubUserRequestEntity.getVersion());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$.errorMessage").value(ExceptionMessages.USERNAME_CANNOT_BE_EMPTY_OR_BLANK.getValue()),
+                        jsonPath("$.errorMessage").value(ExceptionMessages.LOGIN_CANNOT_BE_EMPTY_OR_BLANK.getValue()),
                         jsonPath("$.errorStatus").value("409"),
                         jsonPath("$.errorTime").isNotEmpty()
                 );
@@ -125,7 +125,7 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
         final String notExistedUsernameInDatabase = getFakeNotExistingUsername();
         final GitHubUserDTO gitHubUserDTO = getFakeUserDTO();
 
-        when(gitHubConnectorService.getUserDetailsByUsername(notExistedUsernameInDatabase))
+        when(gitHubConnectorService.getUserDetailsByLogin(notExistedUsernameInDatabase))
                 .thenReturn(gitHubUserDTO);
 
         ExecutorService executorService = Executors.newFixedThreadPool(4);
@@ -142,12 +142,12 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
         executorService.shutdown();
         executorService.awaitTermination(1, TimeUnit.MINUTES);
 
-        Optional<GitHubUserCallsEntity> gitHubUserCallsEntityOptional = gitHubUserCallRepository
-                .findByUsername(notExistedUsernameInDatabase);
-        GitHubUserCallsEntity gitHubUserCallsEntity = gitHubUserCallsEntityOptional.get();
+        Optional<GitHubUserRequestEntity> gitHubUserCallsEntityOptional = gitHubUserRequestRepository
+                .findByLogin(notExistedUsernameInDatabase);
+        GitHubUserRequestEntity gitHubUserRequestEntity = gitHubUserCallsEntityOptional.get();
 
-        assertEquals(4, gitHubUserCallsEntity.getCallsNumber());
-        assertEquals(3, gitHubUserCallsEntity.getVersion());
+        assertEquals(4, gitHubUserRequestEntity.getRequestCount());
+        assertEquals(3, gitHubUserRequestEntity.getVersion());
     }
 
     @Test
@@ -155,7 +155,7 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
         final String existedUsernameInDatabase = getFakeUsername();
         final GitHubUserDTO gitHubUserDTO = getFakeUserDTO();
 
-        when(gitHubConnectorService.getUserDetailsByUsername(existedUsernameInDatabase))
+        when(gitHubConnectorService.getUserDetailsByLogin(existedUsernameInDatabase))
                 .thenReturn(gitHubUserDTO);
 
         ExecutorService executorService = Executors.newFixedThreadPool(4);
@@ -172,12 +172,12 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
         executorService.shutdown();
         executorService.awaitTermination(1, TimeUnit.MINUTES);
 
-        Optional<GitHubUserCallsEntity> gitHubUserCallsEntityOptional = gitHubUserCallRepository
-                .findByUsername(existedUsernameInDatabase);
-        GitHubUserCallsEntity gitHubUserCallsEntity = gitHubUserCallsEntityOptional.get();
+        Optional<GitHubUserRequestEntity> gitHubUserCallsEntityOptional = gitHubUserRequestRepository
+                .findByLogin(existedUsernameInDatabase);
+        GitHubUserRequestEntity gitHubUserRequestEntity = gitHubUserCallsEntityOptional.get();
 
-        assertEquals(20, gitHubUserCallsEntity.getCallsNumber());
-        assertEquals(14, gitHubUserCallsEntity.getVersion());
+        assertEquals(20, gitHubUserRequestEntity.getRequestCount());
+        assertEquals(14, gitHubUserRequestEntity.getVersion());
     }
 
     private void sendAsyncRequestForGetDataAboutUser(String username) throws Exception {

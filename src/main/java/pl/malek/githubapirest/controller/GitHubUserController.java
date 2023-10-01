@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.malek.githubapirest.dto.GitHubUserWithoutDetailsDTO;
-import pl.malek.githubapirest.service.GitHubUserCallFacade;
+import pl.malek.githubapirest.service.GitHubUserRequestFacade;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @RestController
@@ -16,11 +19,11 @@ import pl.malek.githubapirest.service.GitHubUserCallFacade;
 @RequestMapping("/api/v1/users")
 public class GitHubUserController {
 
-    private final GitHubUserCallFacade gitHubUserCallFacade;
+    private final GitHubUserRequestFacade gitHubUserRequestFacade;
 
-    @GetMapping("/{username}")
-    public ResponseEntity<GitHubUserWithoutDetailsDTO> getUserDetailsByUsername(@PathVariable String username) {
-        return ResponseEntity.status(HttpStatus.OK).body(gitHubUserCallFacade.getAndUpdateUserCall(username));
+    @GetMapping("/{login}")
+    public ResponseEntity<GitHubUserWithoutDetailsDTO> getUserDetailsByUsername(@PathVariable String login) {
+        return ResponseEntity.status(HttpStatus.OK).body(gitHubUserRequestFacade.getAndUpdateUserRequest(login));
     }
 
 }

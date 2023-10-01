@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "github_user_calls")
-public class GitHubUserCallsEntity {
+public class GitHubUserRequestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
+    private String login;
 
-    private Long callsNumber;
+    private Long requestCount;
 
     @Version
     private Integer version;

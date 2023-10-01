@@ -5,15 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import pl.malek.githubapirest.service.GitHubUserCallService;
+import pl.malek.githubapirest.service.GitHubUserRequestService;
 
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GitHubUserCallServiceImpl implements GitHubUserCallService {
+public class GitHubUserRequestServiceImpl implements GitHubUserRequestService {
 
-    private final GitHubUserCallUpdateServiceImpl gitHubUserCallUpdateService;
+    private final GitHubUserRequestUpdateServiceImpl gitHubUserCallUpdateService;
 
     @Override
     public void tryUpdateCallsNumber(String username) {

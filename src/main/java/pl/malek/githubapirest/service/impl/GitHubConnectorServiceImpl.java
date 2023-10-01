@@ -25,13 +25,16 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
     private final WebClient.Builder webClientBuilder;
 
     @Override
-    public GitHubUserDTO getUserDetailsByUsername(String username) {
-        log.info("Trying to get information about: {}", username);
-        Flux<GitHubUserDTO> userDTOFlux = getDataFromGitHubApi(username);
+    public GitHubUserDTO getUserDetailsByLogin(String login) {
+        log.info("Trying to get information about: {}", login);
+        Flux<GitHubUserDTO> userDTOFlux = getDataFromGitHubApi(login);
         validateResponseFromExternalApi(userDTOFlux);
 
         GitHubUserDTO gitHubUserDTO = userDTOFlux.blockFirst();
-        doCalculations(gitHubUserDTO);
+
+        if (nonNull(gitHubUserDTO)) {
+            doCalculations(gitHubUserDTO);
+        }
         return gitHubUserDTO;
     }
 
@@ -52,8 +55,8 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
         } return null;
     }
 
-    private Flux<GitHubUserDTO> getDataFromGitHubApi(String username) {
-        final String githubApiUrl = githubApi.replace("{username}", username);
+    private Flux<GitHubUserDTO> getDataFromGitHubApi(String login) {
+        final String githubApiUrl = githubApi.replace("{login}", login);
         return webClientBuilder.build()
                 .get()
                 .uri(githubApiUrl)

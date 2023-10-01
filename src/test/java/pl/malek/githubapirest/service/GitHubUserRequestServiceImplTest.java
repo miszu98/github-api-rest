@@ -7,21 +7,21 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.malek.githubapirest.service.impl.GitHubUserCallServiceImpl;
-import pl.malek.githubapirest.service.impl.GitHubUserCallUpdateServiceImpl;
+import pl.malek.githubapirest.service.impl.GitHubUserRequestServiceImpl;
+import pl.malek.githubapirest.service.impl.GitHubUserRequestUpdateServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static pl.malek.githubapirest.utils.MockDataUtils.getFakeUsername;
 
 @ExtendWith(MockitoExtension.class)
-public class GitHubUserCallServiceImplTest {
+public class GitHubUserRequestServiceImplTest {
 
     @Mock
-    private GitHubUserCallUpdateServiceImpl gitHubUserCallUpdateService;
+    private GitHubUserRequestUpdateServiceImpl gitHubUserCallUpdateService;
 
     @InjectMocks
-    private GitHubUserCallServiceImpl underTest;
+    private GitHubUserRequestServiceImpl underTest;
 
     @Captor
     private ArgumentCaptor<String> usernameCaptor;

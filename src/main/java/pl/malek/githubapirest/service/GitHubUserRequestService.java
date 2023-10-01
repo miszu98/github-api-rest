@@ -1,6 +1,6 @@
 package pl.malek.githubapirest.service;
 
-public interface GitHubUserCallService {
+public interface GitHubUserRequestService {
 
     void tryUpdateCallsNumber(String username);
 

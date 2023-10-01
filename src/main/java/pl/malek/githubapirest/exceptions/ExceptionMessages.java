@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum ExceptionMessages {
 
     EXTERNAL_API_CONNECTION_ERROR("Error connecting to API - the response is null"),
-    USERNAME_CANNOT_BE_EMPTY_OR_BLANK("Username cannot be empty or blank text");
+    LOGIN_CANNOT_BE_EMPTY_OR_BLANK("Login cannot be empty or blank text");
 
     private String value;
 

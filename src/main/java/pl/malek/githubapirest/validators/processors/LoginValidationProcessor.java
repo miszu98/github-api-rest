@@ -2,16 +2,16 @@ package pl.malek.githubapirest.validators.processors;
 
 import org.springframework.stereotype.Component;
 import pl.malek.githubapirest.validators.Validator;
-import pl.malek.githubapirest.validators.validators.UsernameNotEmptyAndNotBlankValidator;
+import pl.malek.githubapirest.validators.validators.LoginNotEmptyAndNotBlankValidator;
 
 @Component
-public class UsernameValidationProcessor {
+public class LoginValidationProcessor {
 
     private Validator validator;
 
-    public UsernameValidationProcessor() {
+    public LoginValidationProcessor() {
         this.validator = Validator.link(
-                new UsernameNotEmptyAndNotBlankValidator()
+                new LoginNotEmptyAndNotBlankValidator()
         );
     }
 

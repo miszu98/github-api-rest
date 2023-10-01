@@ -32,5 +32,15 @@
                               validate="true"/>
     </changeSet>
 
+    <changeSet id="change-cols-names" author="Michał Małek">
+        <renameColumn columnDataType="varchar(255)"
+                       newColumnName="login"
+                       oldColumnName="username"
+                       tableName="github_user_calls"/>
+        <renameColumn columnDataType="varchar(255)"
+                      newColumnName="request_count"
+                      oldColumnName="calls_number"
+                      tableName="github_user_calls"/>
+    </changeSet>
 
 </databaseChangeLog>

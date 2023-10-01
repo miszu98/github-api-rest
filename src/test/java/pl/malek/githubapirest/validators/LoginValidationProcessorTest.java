@@ -6,24 +6,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.malek.githubapirest.exceptions.ValidationException;
-import pl.malek.githubapirest.validators.processors.UsernameValidationProcessor;
+import pl.malek.githubapirest.validators.processors.LoginValidationProcessor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pl.malek.githubapirest.exceptions.ExceptionMessages.USERNAME_CANNOT_BE_EMPTY_OR_BLANK;
+import static pl.malek.githubapirest.exceptions.ExceptionMessages.LOGIN_CANNOT_BE_EMPTY_OR_BLANK;
 import static pl.malek.githubapirest.utils.MockDataUtils.getFakeUsername;
 
 @ExtendWith(MockitoExtension.class)
-public class UsernameValidationProcessorTest {
+public class LoginValidationProcessorTest {
 
     @InjectMocks
-    private UsernameValidationProcessor usernameValidationProcessor;
+    private LoginValidationProcessor loginValidationProcessor;
 
     @Test
     void shouldPassAllValidators() {
         final String username = getFakeUsername();
 
-        usernameValidationProcessor.validate(username);
+        loginValidationProcessor.validate(username);
     }
 
     @Test
@@ -31,8 +31,8 @@ public class UsernameValidationProcessorTest {
         final String username = " ";
 
         ValidationException validationException = assertThrows(ValidationException.class,
-                () -> usernameValidationProcessor.validate(username));
+                () -> loginValidationProcessor.validate(username));
 
-        assertEquals(USERNAME_CANNOT_BE_EMPTY_OR_BLANK.getValue(), validationException.getMessage());
+        assertEquals(LOGIN_CANNOT_BE_EMPTY_OR_BLANK.getValue(), validationException.getMessage());
     }
 }
