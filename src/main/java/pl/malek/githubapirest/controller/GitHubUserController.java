@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.malek.githubapirest.dto.GitHubUserDTO;
+import pl.malek.githubapirest.dto.GitHubUserWithoutDetailsDTO;
 import pl.malek.githubapirest.service.GitHubUserCallFacade;
 
 
@@ -19,7 +19,7 @@ public class GitHubUserController {
     private final GitHubUserCallFacade gitHubUserCallFacade;
 
     @GetMapping("/{username}")
-    public ResponseEntity<GitHubUserDTO> getUserDetailsByUsername(@PathVariable String username) {
+    public ResponseEntity<GitHubUserWithoutDetailsDTO> getUserDetailsByUsername(@PathVariable String username) {
         return ResponseEntity.status(HttpStatus.OK).body(gitHubUserCallFacade.getAndUpdateUserCall(username));
     }
 

@@ -1,7 +1,7 @@
 package pl.malek.githubapirest.service;
 
-import pl.malek.githubapirest.dto.GitHubUserDTO;
+import pl.malek.githubapirest.dto.GitHubUserWithoutDetailsDTO;
 
 public interface GitHubUserCallFacade {
-    GitHubUserDTO getAndUpdateUserCall(String username);
+    GitHubUserWithoutDetailsDTO getAndUpdateUserCall(String username);
 }

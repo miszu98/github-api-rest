@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.malek.githubapirest.exceptions.ExceptionMessages;
 import pl.malek.githubapirest.exceptions.ValidationException;
 import pl.malek.githubapirest.validators.processors.UsernameValidationProcessor;
 

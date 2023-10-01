@@ -65,7 +65,7 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
                         jsonPath("$.name").value("Robert C. Martin"),
                         jsonPath("$.type").value("user"),
                         jsonPath("$.calculations").isEmpty(),
-                        jsonPath("$.avatar_url").value(new URL(getFakeExternalApiUrl()).toString())
+                        jsonPath("$.avatarUrl").value(new URL(getFakeExternalApiUrl()).toString())
                 );
 
         Optional<GitHubUserCallsEntity> gitHubUserCallsEntityOptional = gitHubUserCallRepository
@@ -94,7 +94,7 @@ public class GitHubUserControllerTest extends AbstractIntegrationTestConfigurati
                         jsonPath("$.name").value("Robert C. Martin"),
                         jsonPath("$.type").value("user"),
                         jsonPath("$.calculations").isEmpty(),
-                        jsonPath("$.avatar_url").value(new URL(getFakeExternalApiUrl()).toString())
+                        jsonPath("$.avatarUrl").value(new URL(getFakeExternalApiUrl()).toString())
                 );
 
         Optional<GitHubUserCallsEntity> gitHubUserCallsEntityOptional = gitHubUserCallRepository

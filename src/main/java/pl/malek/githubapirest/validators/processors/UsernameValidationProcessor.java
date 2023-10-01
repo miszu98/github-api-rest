@@ -11,7 +11,7 @@ public class UsernameValidationProcessor {
 
     public UsernameValidationProcessor() {
         this.validator = Validator.link(
-            new UsernameNotEmptyAndNotBlankValidator()
+                new UsernameNotEmptyAndNotBlankValidator()
         );
     }
 

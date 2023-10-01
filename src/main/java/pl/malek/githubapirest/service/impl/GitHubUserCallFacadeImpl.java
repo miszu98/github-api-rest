@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.malek.githubapirest.dto.GitHubUserDTO;
+import pl.malek.githubapirest.dto.GitHubUserWithoutDetailsDTO;
 import pl.malek.githubapirest.service.ApiExternalConnectorService;
 import pl.malek.githubapirest.service.GitHubUserCallFacade;
 import pl.malek.githubapirest.service.GitHubUserCallService;
@@ -29,11 +30,11 @@ public class GitHubUserCallFacadeImpl implements GitHubUserCallFacade {
 
     @Override
     @Transactional
-    public GitHubUserDTO getAndUpdateUserCall(String username) {
+    public GitHubUserWithoutDetailsDTO getAndUpdateUserCall(String username) {
         usernameValidationProcessor.validate(username);
         GitHubUserDTO gitHubUserDTO = apiExternalConnectorService.getUserDetailsByUsername(username);
         gitHubUserCallService.tryUpdateCallsNumber(username);
-        return gitHubUserDTO;
+        return GitHubUserWithoutDetailsDTO.map(gitHubUserDTO);
     }
 
 }
