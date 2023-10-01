@@ -25,9 +25,11 @@ public class GitHubUserRequestUpdateServiceImpl implements GitHubUserRequestUpda
         boolean userNotExists = optionalGitHubUserRequest.isEmpty();
 
         if (userNotExists) {
+            log.info("User not exist in database, create new one");
             GitHubUserRequestEntity newUserRegister = createNewUserRegister(login);
             gitHubUserRequestRepository.save(newUserRegister);
         } else {
+            log.info("Updating existing record for user: {}", login);
             GitHubUserRequestEntity gitHubUserRequestEntity = optionalGitHubUserRequest.get();
             incrementRequestNumber(gitHubUserRequestEntity);
             gitHubUserRequestRepository.save(gitHubUserRequestEntity);

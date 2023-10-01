@@ -39,6 +39,7 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
     }
 
     private void doCalculations(GitHubUserDTO gitHubUserDTO) {
+        log.info("Calculating if that possible");
         Integer followers = gitHubUserDTO.getFollowers();
         Integer publicRepos = gitHubUserDTO.getPublicRepos();
 
@@ -56,6 +57,7 @@ public class GitHubConnectorServiceImpl implements ApiExternalConnectorService {
     }
 
     private Flux<GitHubUserDTO> getDataFromGitHubApi(String login) {
+        log.info("Sending request to external API");
         final String githubApiUrl = githubApi.replace("{login}", login);
         return webClientBuilder.build()
                 .get()

@@ -17,6 +17,7 @@ public class GitHubUserRequestServiceImpl implements GitHubUserRequestService {
 
     @Override
     public void tryUpdateCallsNumber(String username) {
+        log.info("Looking for record for update");
         boolean searchNotUpdatedRecord = true;
         while (searchNotUpdatedRecord) {
             try {
